@@ -24,18 +24,6 @@ else
     cmake_config="Release"
 fi
 
-if [ ${#} -ge 3 ]; then
-    build_target="${3}"
-else
-    build_target="bundle"
-fi
-
-if [ "${build_target}" == "package" ]; then
-    BUILD_DIST_PACKAGES="ON"
-else
-    BUILD_DIST_PACKAGES="OFF"
-fi
-
 # workspace dir for each build env is added to "safe" dirs in global config e.g.
 # ~/.gitconfig so both runner and builder containers trust these dirs
 # owned by different UIDs from that of Git's EUID. This is made necessary
@@ -55,12 +43,12 @@ cmake \
 cmake \
     --preset "${cmake_preset}" \
     -DCMAKE_BUILD_TYPE="${cmake_config}" \
-    -DBUILD_DIST_PACKAGES=${BUILD_DIST_PACKAGES} \
+    -DBUILD_DIST_PACKAGES=OFF \
     -DVCPKG_OVERLAY_PORTS="./vcpkg-overlays/linux-syslibs/ubuntu18" \
     -S . \
     -B ./build
 cmake \
     --build ./build \
     --config "${cmake_config}" \
-    --target package \
+    --target bundle \
     --verbose

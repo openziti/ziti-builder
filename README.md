@@ -1,6 +1,6 @@
 # builder container for ziti-edge-tunnel
 
-This container image builds the ziti-edge-tunnel binary from source. This container image is available from Docker Hub as [openziti/ziti-tunnel-sdk-c-builder](https://hub.docker.com/r/openziti/ziti-tunnel-sdk-c-builder).
+This container image builds the `ziti-edge-tunnel` binary for Linux from source with statically-linked crypto libraries. This container image is available from Docker Hub as [openziti/ziti-tunnel-sdk-c-builder](https://hub.docker.com/r/openziti/ziti-tunnel-sdk-c-builder).
 
 ## Build ziti-edge-tunnel
 

@@ -58,5 +58,3 @@ RUN cd /usr/local \
     && ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
 
 WORKDIR /github/workspace
-COPY ./entrypoint.sh /root/
-ENTRYPOINT [ "/root/entrypoint.sh" ]

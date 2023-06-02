@@ -4,7 +4,7 @@ This container image has CMake and other utilities and libraries installed for
 cross-compiling Ziti projects with GLIBC 2.27. The image is
 automatically published to Docker Hub as
 [openziti/ziti-builder:latest](https://hub.docker.com/r/openziti/ziti-builder) (and `:main`) when
-merging to main. No semantic versions 
+merging to main.
 
 ## Developing this container image
 

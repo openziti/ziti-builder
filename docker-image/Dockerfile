@@ -21,9 +21,9 @@ USER root
 ENV PATH="/usr/local/:${PATH}"
 # used by git to find global config in container that is writeable by the
 # developer's UID
-ENV GIT_CONFIG_GLOBAL="/tmp/ziti-cmake-gitconfig"
+ENV GIT_CONFIG_GLOBAL="/tmp/ziti-builder-gitconfig"
 # used by build scripts to detect running in docker
-ENV BUILD_ENVIRONMENT="ziti-cmake-docker"
+ENV BUILD_ENVIRONMENT="ziti-builder-docker"
 
 RUN apt-get update \
     && apt-get -y install \

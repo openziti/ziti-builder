@@ -69,6 +69,7 @@ jobs:
           tags: |
             # set latest tag for default branch
             type=raw,value=latest,enable={{is_default_branch}}
+            type=semver,pattern={{version}},enable={{starts_with(github.ref, 'refs/tags/v')}}
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action

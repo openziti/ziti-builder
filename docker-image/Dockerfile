@@ -27,19 +27,26 @@ ENV BUILD_ENVIRONMENT="ziti-builder-docker"
 
 RUN apt-get update \
     && apt-get -y install \
+        autoconf \
+        automake \
+        autopoint \
         build-essential \
-        crossbuild-essential-armhf \
         crossbuild-essential-arm64 \
-        curl zip unzip tar \
+        crossbuild-essential-armhf \
+        curl \
         doxygen \
         git \
         graphviz \
+        libssl-dev \
         libsystemd-dev \
+        libtool \
+        ninja-build \
         pkg-config \
         python3 \
+        tar \
+        unzip \
+        zip \
         zlib1g-dev \
-        libssl-dev \
-        ninja-build \
     && rm -rf /var/lib/apt/lists/*
 
 RUN curl -sSfL https://cmake.org/files/v${CMAKE_VERSION%.*}/cmake-${CMAKE_VERSION}-linux-$(uname -m).sh -o cmake.sh \
@@ -53,6 +60,8 @@ COPY ./crossbuild.list /etc/apt/sources.list.d/crossbuild.list
 RUN sed -Ei 's/^deb/deb [arch=amd64]/g' /etc/apt/sources.list
 RUN apt-get update
 RUN apt-get -y install \
+    libcap-dev:armhf \
+    libcap-dev:arm64 \
     zlib1g-dev:armhf \
     zlib1g-dev:arm64 \
     libssl-dev:armhf \

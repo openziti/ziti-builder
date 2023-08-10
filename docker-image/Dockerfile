@@ -37,6 +37,7 @@ RUN apt-get update \
         doxygen \
         git \
         graphviz \
+        libcap-dev \
         libssl-dev \
         libsystemd-dev \
         libtool \

@@ -4,8 +4,8 @@
 # pin the cmake version to ensure repeatable builds
 ARG CMAKE_VERSION="3.26.3"
 
-# Ubuntu Bionic 18.04 LTS has GLIBC 2.27
-FROM ubuntu:bionic
+# Ubuntu focal 20.04 LTS has GLIBC 2.31
+FROM ubuntu:focal
 
 ARG CMAKE_VERSION
 ARG XDG_CONFIG_HOME

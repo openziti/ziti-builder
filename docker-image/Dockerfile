@@ -67,9 +67,8 @@ RUN python3 -m pip install ninja~=1.11.0
 
 RUN curl -sSLf https://apt.llvm.org/llvm-snapshot.gpg.key \
     | gpg --dearmor --output /usr/share/keyrings/llvm-snapshot.gpg \
-    && chmod +r /usr/share/keyrings/llvm-snapshot.gpg
-RUN echo "deb [signed-by=/usr/share/keyrings/llvm-snapshot.gpg] http://apt.llvm.org/bionic/ llvm-toolchain-bionic-7 main" \
-    | tee /etc/apt/sources.list.d/llvm-snapshot.list >/dev/null
+    && chmod +r /usr/share/keyrings/llvm-snapshot.gpg \
+    && echo "deb [signed-by=/usr/share/keyrings/llvm-snapshot.gpg] http://apt.llvm.org/bionic/ llvm-toolchain-bionic-7 main" > /etc/apt/sources.list.d/llvm-snapshot.list
 
 RUN add-apt-repository ppa:git-core/ppa \
     && apt-get update \

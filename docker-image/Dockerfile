@@ -3,13 +3,14 @@
 
 # pin the cmake version to ensure repeatable builds
 ARG CMAKE_VERSION="3.26.3"
-
-FROM gcc:11 as gcc-11
+# patch releases are automatically accepted by pip install ninja~=1.11.0
+ARG NINJA_MINOR_VERSION="1.11.0"
 
 # Ubuntu Bionic 18.04 LTS has GLIBC 2.27
 FROM ubuntu:bionic
 
 ARG CMAKE_VERSION
+ARG NINJA_MINOR_VERSION
 ARG XDG_CONFIG_HOME
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -26,29 +27,25 @@ ENV GIT_CONFIG_GLOBAL="/tmp/ziti-builder-gitconfig"
 # used by build scripts to detect running in docker
 ENV BUILD_ENVIRONMENT="ziti-builder-docker"
 
-### install gcc
-COPY --from=gcc-11 /usr/local/bin/gcc /usr/local/bin/gcc
-COPY --from=gcc-11 /usr/local/bin/g++ /usr/local/bin/g++
-
 RUN apt-get update \
     && apt-get --yes --quiet --no-install-recommends install \
         autoconf \
         automake \
         autopoint \
+        build-essential \
+        cppcheck \
         crossbuild-essential-arm64 \
         crossbuild-essential-armhf \
         curl \
         doxygen \
-        dpkg-dev \
+        flex \
+        gcovr \
         gpg \
         graphviz \
-        libc-dev \
-        libc6-dev \
         libcap-dev \
         libssl-dev \
         libsystemd-dev \
         libtool \
-        make \
         pkg-config \
         python3 \
         python3-pip \
@@ -63,23 +60,25 @@ RUN apt-get update \
     && rm -fr /var/lib/apt/lists/{apt,dpkg,cache,log} /tmp/* /var/tmp/*
 
 # provides patch releases for 1.11 in /usr/local/bin/ninja
-RUN python3 -m pip install ninja~=1.11.0
+RUN python3 -m pip install ninja~=${NINJA_MINOR_VERSION}
 
 RUN curl -sSLf https://apt.llvm.org/llvm-snapshot.gpg.key \
     | gpg --dearmor --output /usr/share/keyrings/llvm-snapshot.gpg \
     && chmod +r /usr/share/keyrings/llvm-snapshot.gpg \
-    && echo "deb [signed-by=/usr/share/keyrings/llvm-snapshot.gpg] http://apt.llvm.org/bionic/ llvm-toolchain-bionic-7 main" > /etc/apt/sources.list.d/llvm-snapshot.list
+    && echo "deb [signed-by=/usr/share/keyrings/llvm-snapshot.gpg] http://apt.llvm.org/bionic/ llvm-toolchain-bionic-17 main" > /etc/apt/sources.list.d/llvm-snapshot.list
 
 RUN add-apt-repository ppa:git-core/ppa \
     && apt-get update \
     && apt-get --yes --quiet --no-install-recommends install \
         git \
-        clang-7 \
+        clang-17 \
+        clang-tidy-17 \
     && apt-get --yes autoremove \
     && apt-get clean autoclean \
     && rm -fr /var/lib/apt/lists/{apt,dpkg,cache,log} /tmp/* /var/tmp/*
-RUN ln -s /usr/bin/clang-7 /usr/bin/clang
-RUN ln -s /usr/bin/clang++-7 /usr/bin/clang++
+RUN ln -sfvn /usr/bin/clang-17 /usr/bin/clang \
+    && ln -sfvn /usr/bin/clang++-17 /usr/bin/clang++ \
+    && ln -sfvn /usr/bin/clang-tidy-17 /usr/bin/clang-tidy
 
 RUN curl -sSfL https://cmake.org/files/v${CMAKE_VERSION%.*}/cmake-${CMAKE_VERSION}-linux-$(uname -m).sh -o cmake.sh \
     && (bash cmake.sh --skip-license --prefix=/usr/local) \
@@ -113,6 +112,21 @@ RUN cd /usr/local \
     && git clone --branch 2023.04.15 https://github.com/microsoft/vcpkg \
     && ./vcpkg/bootstrap-vcpkg.sh -disableMetrics \
     && chmod -R ugo+rwX /usr/local/vcpkg
+
+# RUN cd /usr/local/src \
+#     && wget -q https://github.com/gcc-mirror/gcc/archive/refs/tags/releases/gcc-13.2.0.tar.gz \
+#     && tar -xzf gcc-13.2.0.tar.gz
+# build gcc
+# RUN cd /usr/local/src \
+#     && cd ./gcc-releases-gcc-13.2.0 \
+#     && ./contrib/download_prerequisites \
+#     && mkdir /usr/local/src/gcc-build && cd /usr/local/src/gcc-build \
+#     && /usr/local/gcc-releases-gcc-13.2.0/configure \
+#         --enable-languages=c,c++ \
+#     && make -j$(nproc) \
+#     && make install \
+#     && cd /usr/local \
+#     && rm -rf ./gcc-releases-gcc-13.2.0/ ./gcc-13.2.0.tar.gz
 
 # this is set to document the expectation of a predictable workdir in build
 # scripts used by CI and developers building locally, but GitHub Actions will

@@ -76,7 +76,7 @@ ENV VCPKG_FORCE_SYSTEM_BINARIES=yes
 # lockfile at build time
 RUN cd /usr/local \
     && git config --global advice.detachedHead false \
-    && git clone --branch 2023.04.15 https://github.com/microsoft/vcpkg \
+    && git clone --branch 2023.06.20 https://github.com/microsoft/vcpkg \
     && ./vcpkg/bootstrap-vcpkg.sh -disableMetrics \
     && chmod -R ugo+rwX /usr/local/vcpkg
 

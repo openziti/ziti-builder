@@ -105,30 +105,18 @@ ENV VCPKG_ROOT=/usr/local/vcpkg
 # this must be set on arm. see https://learn.microsoft.com/en-us/vcpkg/users/config-environment#vcpkg_force_system_binaries
 ENV VCPKG_FORCE_SYSTEM_BINARIES=yes
 
-# VCPKG_ROOT is set to filemode 0777 to allow the developer's UID to write the
-# lockfile at build time
+# VCPKG_ROOT is set to filemode 0777 to allow the developer's UID to write the lockfile at build time; and git writes
+# global config settings as root in GIT_CONFIG_GLOBAL
 RUN cd /usr/local \
     && git config --global advice.detachedHead false \
     && git clone --branch 2023.06.20 https://github.com/microsoft/vcpkg \
     && ./vcpkg/bootstrap-vcpkg.sh -disableMetrics \
     && chmod -R ugo+rwX /usr/local/vcpkg
 
-# RUN cd /usr/local/src \
-#     && wget -q https://github.com/gcc-mirror/gcc/archive/refs/tags/releases/gcc-13.2.0.tar.gz \
-#     && tar -xzf gcc-13.2.0.tar.gz
-# build gcc
-# RUN cd /usr/local/src \
-#     && cd ./gcc-releases-gcc-13.2.0 \
-#     && ./contrib/download_prerequisites \
-#     && mkdir /usr/local/src/gcc-build && cd /usr/local/src/gcc-build \
-#     && /usr/local/gcc-releases-gcc-13.2.0/configure \
-#         --enable-languages=c,c++ \
-#     && make -j$(nproc) \
-#     && make install \
-#     && cd /usr/local \
-#     && rm -rf ./gcc-releases-gcc-13.2.0/ ./gcc-13.2.0.tar.gz
-
 # this is set to document the expectation of a predictable workdir in build
 # scripts used by CI and developers building locally, but GitHub Actions will
 # always override with WORKDIR=/github/workspace when running the job container
 WORKDIR /github/workspace
+
+COPY ./entrypoint.sh /entrypoint.sh
+ENTRYPOINT [ "/entrypoint.sh" ]

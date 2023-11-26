@@ -38,6 +38,7 @@ RUN apt-get update \
         crossbuild-essential-armhf \
         curl \
         doxygen \
+        expect \
         flex \
         gcovr \
         gpg \

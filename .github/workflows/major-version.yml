@@ -3,6 +3,9 @@ on:
   release:
     types: [published, edited]
 
+permissions:
+  contents: write
+
 # move the major version tag to the latest release, e.g., v1, to enable
 # consumers to subscribe to the latest reverse-compatible release
 jobs:

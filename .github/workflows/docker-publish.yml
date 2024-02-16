@@ -99,6 +99,8 @@ jobs:
                   git config --global user.name 'github-actions[bot]'
                   git config --global user.email 'github-actions[bot]@users.noreply.github.com'
                   git commit -m "Updated vcpkg version to ${NEW_VCPKG_VERSION}"
+                  git fetch origin
+                  git rebase origin/${{ github.head_ref }}
                   git push origin HEAD:${{ github.head_ref }}
                 }
               fi

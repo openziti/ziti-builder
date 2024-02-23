@@ -13,6 +13,7 @@ FROM ubuntu:bionic
 
 ARG CMAKE_VERSION
 ARG NINJA_MINOR_VERSION
+ARG NODEJS_VERSION
 ARG XDG_CONFIG_HOME
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -86,8 +87,9 @@ RUN curl -sSfL https://cmake.org/files/v${CMAKE_VERSION%.*}/cmake-${CMAKE_VERSIO
     && (bash cmake.sh --skip-license --prefix=/usr/local) \
     && rm cmake.sh
 
+#              https://unofficial-builds.nodejs.org/download/release/v20.9.0           /node-v20.9.0           -linux-x64-glibc-217.tar.gz
 RUN curl -sSfL https://unofficial-builds.nodejs.org/download/release/v${NODEJS_VERSION}/node-v${NODEJS_VERSION}-linux-x64-glibc-217.tar.gz -o node.tar.gz \
-    && tar -C /usr/local/node20 --strip-components=1 -xzf node.tar.gz \
+    && mkdir -p /usr/local/node20 && tar -C /usr/local/node20 --strip-components=1 -xzf node.tar.gz \
     && rm node.tar.gz
 
 # configure Debian Multi-Arch to allow cross-compiling

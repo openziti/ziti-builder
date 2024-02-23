@@ -5,6 +5,8 @@
 ARG CMAKE_VERSION="3.26.3"
 # patch releases are automatically accepted by pip install ninja~=1.11.0
 ARG NINJA_MINOR_VERSION="1.11.0"
+# node provides an unoffocial build that works with (older) glibc 2.27
+ARG NODEJS_VERSION="20.9.0"
 
 # Ubuntu Bionic 18.04 LTS has GLIBC 2.27
 FROM ubuntu:bionic
@@ -83,6 +85,10 @@ RUN ln -sfvn /usr/bin/clang-17 /usr/bin/clang \
 RUN curl -sSfL https://cmake.org/files/v${CMAKE_VERSION%.*}/cmake-${CMAKE_VERSION}-linux-$(uname -m).sh -o cmake.sh \
     && (bash cmake.sh --skip-license --prefix=/usr/local) \
     && rm cmake.sh
+
+RUN curl -sSfL https://unofficial-builds.nodejs.org/download/release/v${NODEJS_VERSION}/node-v${NODEJS_VERSION}-linux-x64-glibc-217.tar.gz -o node.tar.gz \
+    && tar -C /usr/local/node20 --strip-components=1 -xzf node.tar.gz \
+    && rm node.tar.gz
 
 # configure Debian Multi-Arch to allow cross-compiling
 RUN dpkg --add-architecture armhf

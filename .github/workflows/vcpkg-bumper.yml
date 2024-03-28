@@ -1,6 +1,9 @@
 name: Bump dependency versions
 
 on:
+  push:
+    branches:
+      - bump-vcpkg
   workflow_dispatch:
   schedule:
     # Run every day at 10:00 UTC (05:00 EST)

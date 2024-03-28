@@ -3,6 +3,7 @@
 
 # pin the cmake version to ensure repeatable builds
 ARG CMAKE_VERSION="3.26.3"
+ARG VCPKG_VERSION="2024.03.25"
 # patch releases are automatically accepted by pip install ninja~=1.11.0
 ARG NINJA_MINOR_VERSION="1.11.0"
 
@@ -10,6 +11,7 @@ ARG NINJA_MINOR_VERSION="1.11.0"
 FROM ubuntu:bionic
 
 ARG CMAKE_VERSION
+ARG VCPKG_VERSION
 ARG NINJA_MINOR_VERSION
 ARG XDG_CONFIG_HOME
 ARG DEBIAN_FRONTEND=noninteractive
@@ -68,6 +70,7 @@ RUN curl -sSLf https://apt.llvm.org/llvm-snapshot.gpg.key \
     && chmod +r /usr/share/keyrings/llvm-snapshot.gpg \
     && echo "deb [signed-by=/usr/share/keyrings/llvm-snapshot.gpg] http://apt.llvm.org/bionic/ llvm-toolchain-bionic-17 main" > /etc/apt/sources.list.d/llvm-snapshot.list
 
+# when we migrate this builder to focal or newer, just remove this ppa and the rest should work
 RUN add-apt-repository ppa:git-core/ppa \
     && apt-get update \
     && apt-get --yes --quiet --no-install-recommends install \
@@ -110,7 +113,7 @@ ENV VCPKG_FORCE_SYSTEM_BINARIES=yes
 # global config settings as root in GIT_CONFIG_GLOBAL
 RUN cd /usr/local \
     && git config --global advice.detachedHead false \
-    && git clone --branch 2023.06.20 https://github.com/microsoft/vcpkg \
+    && git clone --branch "${VCPKG_VERSION}" https://github.com/microsoft/vcpkg \
     && ./vcpkg/bootstrap-vcpkg.sh -disableMetrics \
     && chmod -R ugo+rwX /usr/local/vcpkg
 

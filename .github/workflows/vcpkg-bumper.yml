@@ -1,0 +1,60 @@
+name: Bump vcpkg version
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Run every day at 10:00 UTC (05:00 EST)
+    - cron: 0 10 * * *
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Find latest vcpkg version
+        id: latest_vcpkg
+        uses: gregziegan/fetch-latest-release@v2.0.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          repo_path: "microsoft/vcpkg"
+
+      - name: Compare vcpkg version
+        id: compare_vcpkg
+        shell: bash
+        env:
+          NEW_VCPKG_VERSION: ${{ vars.VCPKG_VERSION || steps.latest_vcpkg.outputs.tag_name }}
+        run: |
+          set -o pipefail
+          set -o xtrace
+          CURRENT_VCPKG_VERSION="$(< ./.vcpkg_version)"
+          if [[ "$NEW_VCPKG_VERSION" == "$CURRENT_VCPKG_VERSION" ]]; then
+            echo "update_vcpkg=false" | tee -a $GITHUB_OUTPUT
+          else
+            echo "update_vcpkg=true" | tee -a $GITHUB_OUTPUT
+          fi
+
+      - name: Bump version file
+        if: steps.compare_vcpkg.outputs.update_vcpkg == 'true'
+        shell: bash
+        env:
+          NEW_VCPKG_VERSION: ${{ vars.VCPKG_VERSION || steps.latest_vcpkg.outputs.tag_name }}
+        run: |
+          set -o pipefail
+          set -o xtrace
+          echo -n "$NEW_VCPKG_VERSION" > .vcpkg_version
+
+      - name: Create Pull Request if vcpkg version changed
+        if: steps.compare_vcpkg.outputs.update_vcpkg == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: bump vcpkg version to ${{ vars.VCPKG_VERSION || steps.latest_vcpkg.outputs.tag_name }}
+          title: bump vcpkg version to ${{ vars.VCPKG_VERSION || steps.latest_vcpkg.outputs.tag_name }}
+          body: update vcpkg to version ${{ vars.VCPKG_VERSION || steps.latest_vcpkg.outputs.tag_name }}
+          branch: update-vcpkg-${{ vars.VCPKG_VERSION || steps.latest_vcpkg.outputs.tag_name }}

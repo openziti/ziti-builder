@@ -24,7 +24,6 @@ jobs:
 
     runs-on: ubuntu-latest
     permissions:
-      contents: write
       packages: write
       # This is used to complete the identity challenge
       # with sigstore/fulcio when running outside of PRs.
@@ -73,38 +72,12 @@ jobs:
             # keep major version, e.g., v1, tag updated to latest release
             type=semver,pattern=v{{major}},enable=${{startsWith(github.ref, 'refs/tags/v')}}
 
-      - name: Find latest vcpkg version
-        if: github.event_name == 'pull_request'
-        id: latest_vcpkg
-        uses: gregziegan/fetch-latest-release@v2.0.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          repo_path: "microsoft/vcpkg"
-
-      # if pr, define step output vcpkg_version from override var VCPKG_VERSION or latest release, else use version in
-      # file .vcpkg_version
-      - name: Select a vcpkg version to install
+      - name: Find vcpkg version to install
         id: select_vcpkg
         shell: bash
         run: |
           set -o pipefail
           set -o xtrace
-          if [ "${{ github.event_name }}" == pull_request ]; then
-              NEW_VCPKG_VERSION="${{ vars.VCPKG_VERSION || steps.latest_vcpkg.outputs.tag_name }}"
-              CURRENT_VCPKG_VERSION="$(< ./.vcpkg_version)"
-              if [ "$NEW_VCPKG_VERSION" != "$CURRENT_VCPKG_VERSION" ]; then
-                echo "$NEW_VCPKG_VERSION" > .vcpkg_version
-                git add .vcpkg_version
-                git diff --staged --exit-code || {
-                  git config --global user.name 'github-actions[bot]'
-                  git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-                  git commit -m "Updated vcpkg version to ${NEW_VCPKG_VERSION}"
-                  git fetch origin
-                  git rebase origin/${{ github.head_ref }}
-                  git push origin HEAD:${{ github.head_ref }}
-                }
-              fi
-          fi
           echo "vcpkg_version=$(< ./.vcpkg_version)" | tee -a $GITHUB_OUTPUT
 
       # Build and push Docker image with Buildx (don't push on PR)

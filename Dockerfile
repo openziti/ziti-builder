@@ -3,7 +3,7 @@
 
 # pin the cmake version to ensure repeatable builds
 ARG CMAKE_VERSION="3.26.3"
-ARG VCPKG_VERSION="2024.01.12"
+ARG VCPKG_VERSION="2024.03.25"
 # patch releases are automatically accepted by pip install ninja~=1.11.0
 ARG NINJA_MINOR_VERSION="1.11.0"
 

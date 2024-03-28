@@ -54,12 +54,10 @@ jobs:
 
       - name: Create Pull Request if vcpkg version changed
         if: steps.compare_vcpkg.outputs.update_vcpkg == 'true'
-        uses: peter-evans/create-pull-request@v3
-        env:
-          NEW_VCPKG_VERSION: ${{ vars.VCPKG_VERSION || steps.latest_vcpkg.outputs.tag_name }}
+        uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "bump vcpkg version to ${NEW_VCPKG_VERSION}"
-          title: "bump vcpkg version to ${NEW_VCPKG_VERSION}"
-          body: "This PR updates vcpkg to version ${NEW_VCPKG_VERSION}"
-          branch: "update-vcpkg-${NEW_VCPKG_VERSION}"
+          commit-message: bump vcpkg version to ${{ vars.VCPKG_VERSION || steps.latest_vcpkg.outputs.tag_name }}
+          title: bump vcpkg version to ${{ vars.VCPKG_VERSION || steps.latest_vcpkg.outputs.tag_name }}
+          body: update vcpkg to version ${{ vars.VCPKG_VERSION || steps.latest_vcpkg.outputs.tag_name }}
+          branch: update-vcpkg-${{ vars.VCPKG_VERSION || steps.latest_vcpkg.outputs.tag_name }}

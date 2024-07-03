@@ -17,7 +17,7 @@ to build the project.
 
 ```bash
 # optionally substitute podman or nerdctl for docker
-docker build ./docker-image/ --tag ziti-builder-test
+docker build . --tag ziti-builder-test
 ```
 
 ### Run the local test image to cross-compile a Ziti project

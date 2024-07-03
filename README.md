@@ -42,3 +42,9 @@ docker run \
 1. Merge the pull request to `main`.
 1. Create a meaningful release tag in GitHub that matches the regex `v[0-9]+.[0-9]+.[0-9]+`.
 1. The release will trigger a GitHub Action that builds and publishes the image to Docker Hub.
+
+## GLIBC Compatibility
+
+Ziti projects that build with this image will produce artifacts that require GLIBC >= 2.31.
+
+This excludes Ubuntu Bionic and CentOS 7.

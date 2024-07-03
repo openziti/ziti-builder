@@ -7,8 +7,8 @@ ARG VCPKG_VERSION="2024.03.25"
 # patch releases are automatically accepted by pip install ninja~=1.11.0
 ARG NINJA_MINOR_VERSION="1.11.0"
 
-# Ubuntu Bionic 18.04 LTS has GLIBC 2.27
-FROM ubuntu:bionic
+# Ubuntu Bionic 20.04 LTS has GLIBC 2.31
+FROM ubuntu:focal
 
 ARG CMAKE_VERSION
 ARG VCPKG_VERSION
@@ -42,13 +42,18 @@ RUN apt-get update \
         doxygen \
         expect \
         flex \
+        g++-arm-linux-gnueabihf \
+        gcc-aarch64-linux-gnu \
+        gcc-arm-linux-gnueabihf \
         gcovr \
+        git \
         gpg \
         graphviz \
         libcap-dev \
         libssl-dev \
         libsystemd-dev \
         libtool \
+        ninja-build \
         pkg-config \
         python3 \
         python3-pip \
@@ -62,13 +67,10 @@ RUN apt-get update \
     && apt-get clean autoclean \
     && rm -fr /var/lib/apt/lists/{apt,dpkg,cache,log} /tmp/* /var/tmp/*
 
-# provides patch releases for 1.11 in /usr/local/bin/ninja
-RUN python3 -m pip install ninja~=${NINJA_MINOR_VERSION}
-
 RUN curl -sSLf https://apt.llvm.org/llvm-snapshot.gpg.key \
     | gpg --dearmor --output /usr/share/keyrings/llvm-snapshot.gpg \
     && chmod +r /usr/share/keyrings/llvm-snapshot.gpg \
-    && echo "deb [signed-by=/usr/share/keyrings/llvm-snapshot.gpg] http://apt.llvm.org/bionic/ llvm-toolchain-bionic-17 main" > /etc/apt/sources.list.d/llvm-snapshot.list
+    && echo "deb [signed-by=/usr/share/keyrings/llvm-snapshot.gpg] http://apt.llvm.org/focal/ llvm-toolchain-focal-17 main" > /etc/apt/sources.list.d/llvm-snapshot.list
 
 # when we migrate this builder to focal or newer, just remove this ppa and the rest should work
 RUN add-apt-repository ppa:git-core/ppa \

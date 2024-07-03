@@ -4,15 +4,12 @@
 # pin the cmake version to ensure repeatable builds
 ARG CMAKE_VERSION="3.26.3"
 ARG VCPKG_VERSION="2024.03.25"
-# patch releases are automatically accepted by pip install ninja~=1.11.0
-ARG NINJA_MINOR_VERSION="1.11.0"
 
 # Ubuntu Bionic 20.04 LTS has GLIBC 2.31
 FROM ubuntu:focal
 
 ARG CMAKE_VERSION
 ARG VCPKG_VERSION
-ARG NINJA_MINOR_VERSION
 ARG XDG_CONFIG_HOME
 ARG DEBIAN_FRONTEND=noninteractive
 

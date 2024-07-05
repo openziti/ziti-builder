@@ -22,7 +22,7 @@ ENV TZ=UTC
 ENV PATH="/usr/local/:${PATH}"
 # used by git to find global config in container that is writeable by the
 # developer's UID
-ENV GIT_CONFIG_GLOBAL="/tmp/ziti-builder-gitconfig"
+ENV GIT_CONFIG_GLOBAL="/ziti-builder-gitconfig"
 # used by build scripts to detect running in docker
 ENV BUILD_ENVIRONMENT="ziti-builder-docker"
 
@@ -43,7 +43,6 @@ RUN apt-get update \
         gcc-aarch64-linux-gnu \
         gcc-arm-linux-gnueabihf \
         gcovr \
-        git \
         gpg \
         graphviz \
         libcap-dev \
@@ -71,6 +70,7 @@ RUN curl -sSLf https://apt.llvm.org/llvm-snapshot.gpg.key \
 
 RUN apt-get update \
     && apt-get --yes --quiet --no-install-recommends install \
+        git \
         clang-17 \
         clang-tidy-17 \
     && apt-get --yes autoremove \
@@ -108,6 +108,7 @@ ENV VCPKG_FORCE_SYSTEM_BINARIES=yes
 # VCPKG_ROOT is set to filemode 0777 to allow the developer's UID to write the lockfile at build time; and git writes
 # global config settings as root in GIT_CONFIG_GLOBAL
 RUN cd /usr/local \
+    && touch "${GIT_CONFIG_GLOBAL}" \
     && git config --global advice.detachedHead false \
     && git clone --branch "${VCPKG_VERSION}" https://github.com/microsoft/vcpkg \
     && ./vcpkg/bootstrap-vcpkg.sh -disableMetrics \

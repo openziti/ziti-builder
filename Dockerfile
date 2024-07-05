@@ -68,7 +68,9 @@ RUN curl -sSLf https://apt.llvm.org/llvm-snapshot.gpg.key \
     && chmod +r /usr/share/keyrings/llvm-snapshot.gpg \
     && echo "deb [signed-by=/usr/share/keyrings/llvm-snapshot.gpg] http://apt.llvm.org/focal/ llvm-toolchain-focal-17 main" > /etc/apt/sources.list.d/llvm-snapshot.list
 
-RUN apt-get update \
+# re-added git ppa because cmake failed to find git version tag on focal runner
+RUN add-apt-repository ppa:git-core/ppa \
+    && apt-get update \
     && apt-get --yes --quiet --no-install-recommends install \
         git \
         clang-17 \

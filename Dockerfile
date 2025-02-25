@@ -45,6 +45,7 @@ RUN apt-get update \
         gcovr \
         gpg \
         gpg-agent \
+        openssh-client \
         graphviz \
         libcap-dev \
         libssl-dev \

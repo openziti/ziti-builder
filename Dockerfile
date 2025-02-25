@@ -44,6 +44,7 @@ RUN apt-get update \
         gcc-arm-linux-gnueabihf \
         gcovr \
         gpg \
+        gpg-agent \
         graphviz \
         libcap-dev \
         libssl-dev \

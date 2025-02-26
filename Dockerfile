@@ -45,6 +45,7 @@ RUN apt-get update \
         gcovr \
         gpg \
         gpg-agent \
+        openssh-client \
         graphviz \
         libcap-dev \
         libssl-dev \
@@ -121,6 +122,9 @@ RUN cd /usr/local \
 # scripts used by CI and developers building locally, but GitHub Actions will
 # always override with WORKDIR=/github/workspace when running the job container
 WORKDIR /github/workspace
+
+# trust github.com known ssh host keys
+COPY --chmod=0644 ./github-known-hosts /etc/ssh/ssh_known_hosts
 
 COPY ./entrypoint.sh /entrypoint.sh
 ENTRYPOINT [ "/entrypoint.sh" ]

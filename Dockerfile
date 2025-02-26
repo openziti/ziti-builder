@@ -123,5 +123,8 @@ RUN cd /usr/local \
 # always override with WORKDIR=/github/workspace when running the job container
 WORKDIR /github/workspace
 
+# trust github.com known ssh host keys
+COPY --chmod=0644 ./github-known-hosts /etc/ssh/ssh_known_hosts
+
 COPY ./entrypoint.sh /entrypoint.sh
 ENTRYPOINT [ "/entrypoint.sh" ]

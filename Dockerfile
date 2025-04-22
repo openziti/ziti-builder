@@ -98,10 +98,14 @@ RUN apt-get update \
         build-essential \
         libcap-dev:armhf \
         libcap-dev:arm64 \
-        zlib1g-dev:armhf \
-        zlib1g-dev:arm64 \
         libssl-dev:armhf \
         libssl-dev:arm64 \
+        libprotobuf-c-dev:arm64 \
+        libprotobuf-c-dev:armhf \
+        zlib1g-dev:armhf \
+        zlib1g-dev:arm64 \
+        linux-libc-dev:arm64 \
+        linux-libc-dev:armhf \
     && apt-get --yes autoremove \
     && apt-get clean autoclean \
     && rm -fr /var/lib/apt/lists/{apt,dpkg,cache,log} /tmp/* /var/tmp/*

@@ -31,7 +31,6 @@ RUN apt-get update \
         autoconf \
         automake \
         autopoint \
-        build-essential \
         cppcheck \
         crossbuild-essential-arm64 \
         crossbuild-essential-armhf \
@@ -93,8 +92,10 @@ RUN dpkg --add-architecture armhf
 RUN dpkg --add-architecture arm64
 COPY ./crossbuild.list /etc/apt/sources.list.d/crossbuild.list
 RUN sed -Ei 's/^deb/deb [arch=amd64]/g' /etc/apt/sources.list
+# install build-essential after adding architectures to avoid errors where cmake can not find build tools like gcc, g++
 RUN apt-get update \
     && apt-get --yes --quiet --no-install-recommends install \
+        build-essential \
         libcap-dev:armhf \
         libcap-dev:arm64 \
         zlib1g-dev:armhf \

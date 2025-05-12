@@ -1,9 +1,9 @@
 # Builder container for Ziti projects
 
 This container image has CMake and other utilities and libraries installed for
-cross-compiling Ziti projects with GLIBC 2.27. The image is
-automatically published to Docker Hub as
-[openziti/ziti-builder:latest](https://hub.docker.com/r/openziti/ziti-builder) (and `:main`) when
+natively and cross-compiling Ziti projects. The image is automatically
+published to Docker Hub as
+[openziti/ziti-builder](https://hub.docker.com/r/openziti/ziti-builder) (and `:main`) when
 merging to main.
 
 ## Developing this container image
@@ -45,6 +45,14 @@ docker run \
 
 ## GLIBC Compatibility
 
-Ziti projects that build with this image will produce artifacts that require GLIBC >= 2.31.
+Ziti projects that build with this image will produce artifacts that require a GLIBC version greater than or equal to the version of GLIBC installed in the image.
 
-This excludes Ubuntu Bionic and CentOS 7.
+| ziti-builder Version | Ubuntu Release | GLIBC Version       | libssl Version                   |
+|---------------------|---------------|---------------------|----------------------------------|
+| v1                  | bionic        | 2.27-3ubuntu1.6     | 1.1.1-1ubuntu2.1~18.04.23        |
+| v2                  | focal         | 2.31-0ubuntu9.17    | 1.1.1f-1ubuntu2.24               |
+| v3                  | jammy         | 2.35-0ubuntu3.9     | 3.0.2-0ubuntu1.19                |
+| v4 (future)         | noble         | 2.39-0ubuntu8.4     | 3.0.13-0ubuntu3.5                |
+
+
+

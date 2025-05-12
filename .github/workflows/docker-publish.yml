@@ -67,8 +67,8 @@ jobs:
             # set tag "main" for default branch
             type=raw,value=main,enable={{is_default_branch}}
 
-            # set tag "latest" for semver tags with version 2 (Ubuntu 20.04 Focal)
-            type=raw,value=latest,enable=${{startsWith(github.ref, 'refs/tags/v2')}}
+            # set tag "latest" for semver tags
+            type=raw,value=latest,enable=${{startsWith(github.ref, 'refs/tags/v')}}
 
             # publish semver release tags
             type=semver,pattern={{version}},enable=${{startsWith(github.ref, 'refs/tags/v')}}

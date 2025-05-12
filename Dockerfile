@@ -5,8 +5,8 @@
 ARG CMAKE_VERSION="3.26.3"
 ARG VCPKG_VERSION="2024.03.25"
 
-# Ubuntu Bionic 20.04 LTS has GLIBC 2.31
-FROM ubuntu:focal
+# Ubuntu Jammy Jellyfish has GLIBC 2.35
+FROM ubuntu:jammy
 
 ARG CMAKE_VERSION
 ARG VCPKG_VERSION
@@ -20,7 +20,7 @@ USER root
 ENV GIT_DISCOVERY_ACROSS_FILESYSTEM=1
 ENV TZ=UTC
 ENV PATH="/usr/local/:${PATH}"
-# used by git to find global config in container that is writeable by the
+# used by git to find global config in container that is writable by the
 # developer's UID
 ENV GIT_CONFIG_GLOBAL="/ziti-builder-gitconfig"
 # used by build scripts to detect running in docker
@@ -48,7 +48,10 @@ RUN apt-get update \
         graphviz \
         libcap-dev \
         libssl-dev \
+        libsodium-dev \
         libsystemd-dev \
+        libprotobuf-c-dev \
+        libjson-c-dev \
         libtool \
         ninja-build \
         pkg-config \
@@ -96,6 +99,7 @@ RUN sed -Ei 's/^deb/deb [arch=amd64]/g' /etc/apt/sources.list
 RUN apt-get update \
     && apt-get --yes --quiet --no-install-recommends install \
         build-essential \
+    && apt-get --yes --quiet --no-install-recommends install \
         libcap-dev:armhf \
         libcap-dev:arm64 \
         libssl-dev:armhf \

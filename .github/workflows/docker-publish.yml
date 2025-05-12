@@ -64,11 +64,15 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            # set latest tag for default branch "main"
+            # set tag "main" for default branch
             type=raw,value=main,enable={{is_default_branch}}
-            type=raw,value=latest,enable=${{startsWith(github.ref, 'refs/tags/v')}}
+
+            # set tag "latest" for semver tags with version 2 (Ubuntu 20.04 Focal)
+            type=raw,value=latest,enable=${{startsWith(github.ref, 'refs/tags/v2')}}
+
             # publish semver release tags
             type=semver,pattern={{version}},enable=${{startsWith(github.ref, 'refs/tags/v')}}
+
             # keep major version, e.g., v1, tag updated to latest release
             type=semver,pattern=v{{major}},enable=${{startsWith(github.ref, 'refs/tags/v')}}
 

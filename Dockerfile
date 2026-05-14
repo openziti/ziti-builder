@@ -2,7 +2,7 @@
 # cross-compile Ziti projects that use CMake
 
 # pin the cmake version to ensure repeatable builds
-ARG CMAKE_VERSION="3.26.3"
+ARG CMAKE_VERSION="4.3.2"
 ARG VCPKG_VERSION="2024.03.25"
 
 # Ubuntu Jammy Jellyfish has GLIBC 2.35

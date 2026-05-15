@@ -2,7 +2,7 @@
 # cross-compile Ziti projects that use CMake
 
 # pin the cmake version to ensure repeatable builds
-ARG CMAKE_VERSION="3.26.3"
+ARG CMAKE_VERSION="4.3.2"
 ARG VCPKG_VERSION="2024.03.25"
 # patch releases are automatically accepted by pip install ninja~=1.11.0
 ARG NINJA_MINOR_VERSION="1.11.0"
@@ -32,6 +32,7 @@ ENV BUILD_ENVIRONMENT="ziti-builder-docker"
 RUN apt-get update \
     && apt-get --yes --quiet --no-install-recommends install \
         autoconf \
+        autoconf-archive \
         automake \
         autopoint \
         build-essential \

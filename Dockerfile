@@ -29,6 +29,7 @@ ENV BUILD_ENVIRONMENT="ziti-builder-docker"
 RUN apt-get update \
     && apt-get --yes --quiet --no-install-recommends install \
         autoconf \
+        autoconf-archive \
         automake \
         autopoint \
         cppcheck \
